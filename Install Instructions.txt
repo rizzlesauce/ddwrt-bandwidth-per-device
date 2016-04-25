@@ -1,0 +1,20 @@
+# Install instructions
+# Enable SSH on your router and copy the "MyPage" folder to /tmp/MyPage/
+
+# Run these commands in SSH after you copied the files to your /tmp/MyPage folder
+
+chmod +x /tmp/MyPage/*.sh
+ln -s /tmp/MyPage/www/qos_conntrack.js /tmp/www/
+
+nvram set mypage_scripts="/tmp/MyPage/qos_conntrack.sh"
+nvram commit
+
+# With JFFS enabled copy the files to your persistant storage
+cp -r /tmp/MyPage /jffs/	
+
+# Add the following to your startup script (note 10 is for 10 seconds this should be adjusted based on the user's preference and responsiveness preference)
+cp -r /jffs/MyPage /tmp/
+ln -s /tmp/MyPage/www/qos_conntrack.js /tmp/www/
+chmod +x /tmp/MyPage/*.sh
+sleep 30
+/tmp/MyPage/traffic_monitor.sh 10&
